@@ -58,7 +58,7 @@ def calculate_split_info(path: str, label_dict: dict, args):
         extracted_data = extracted_data.append(data[data['label'] == word_label][:args.single_class_pics])
 
     # 将对应的类与图片提出，放到一个新的文件夹中
-    tiny_path = os.path.join(path, 'tinyImageNet')
+    tiny_path = os.path.join(path, '..', 'tinyImageNet')
     tiny_imagePath = os.path.join(tiny_path, 'images')
     if not os.path.isdir(tiny_path):
         os.makedirs(tiny_path)
