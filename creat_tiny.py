@@ -48,14 +48,15 @@ def calculate_split_info(path: str, label_dict: dict, args):
 
     # 将data中的标签换为数字标签
     for k, v in long_label_dict.items():
-        data.replace(k, v[0], inplace=True)
+        data.replace(k, v[1], inplace=True)
 
     # 提取符合要求的dataframe
     if args.extraction_order is None:  # 如果没有指定提出的类，那么就随机指定
         args.extraction_order = np.random.randint(0, 100, args.class_num)
     extracted_data = pd.DataFrame(columns=['filename', 'label'])
-    for label in args.extraction_order:
-        extracted_data = extracted_data.append(data[data['label'] == label][:args.single_class_pics])
+    for num_label in args.extraction_order:
+        word_label = all_class2text[num_label][0]
+        extracted_data = extracted_data.append(data[data['label'] == word_label][:args.single_class_pics])
 
     # 将对应的类与图片提出，放到一个新的文件夹中
     tiny_path = os.path.join(path, 'tinyImageNet')
