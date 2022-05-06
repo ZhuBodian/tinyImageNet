@@ -40,7 +40,6 @@ def calculate_split_info(path: str, label_dict: dict, args):
     # 字母数字标签到数字标签、字母标签
     long_label_dict = dict([(label, [index, label_dict[label]]) for index, label in enumerate(labels)])
     all_class2text = dict([(v[0], [v[1], k]) for k, v in long_label_dict.items()])
-    utils.create_json(os.path.join(path, 'all_class2text.json'), all_class2text)
 
     # concat csv data
     data = pd.concat([train_data, val_data, test_data], axis=0)
@@ -64,7 +63,7 @@ def calculate_split_info(path: str, label_dict: dict, args):
     if not os.path.isdir(tiny_path):
         os.makedirs(tiny_path)
         os.makedirs(tiny_imagePath)
-    extracted_data.to_csv(os.path.join(tiny_path, 'all.csv'))
+    extracted_data.to_csv(os.path.join(tiny_path, 'all.csv'), index=False)
     for idx, row in extracted_data.iterrows():
         shutil.copy(os.path.join(image_dir, row['filename']), os.path.join(tiny_imagePath, row['filename']))
 
@@ -73,12 +72,12 @@ def calculate_split_info(path: str, label_dict: dict, args):
     for train_index, test_index in split.split(extracted_data, extracted_data["label"]):
         strat_train_set = extracted_data.iloc[train_index, :]
         strat_test_set = extracted_data.iloc[test_index, :]  # 保证测试集
-        strat_train_set.to_csv(os.path.join(tiny_path, "train.csv"))
-        strat_test_set.to_csv(os.path.join(tiny_path, "test.csv"))
+        strat_train_set.to_csv(os.path.join(tiny_path, "train.csv"), index=False)
+        strat_test_set.to_csv(os.path.join(tiny_path, "test.csv"), index=False)
 
     # 生成相关文档
-    utils.create_json(os.path.join(tiny_path, 'all_class2text.json'), all_class2text)
-    utils.create_json(os.path.join(tiny_path, 'datasetIllustrate.json'), vars(args))
+    utils.create_json(os.path.join(tiny_path, 'mini_num_label2text_label.json'), all_class2text)
+    utils.create_json(os.path.join(tiny_path, 'dataset_pars.json'), vars(args))
 
 
 def main():
